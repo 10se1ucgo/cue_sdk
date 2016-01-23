@@ -1,3 +1,4 @@
+# Python port of color_pulse.cpp from the CUE SDK examples.
 from __future__ import division
 import win32api
 import win32con
