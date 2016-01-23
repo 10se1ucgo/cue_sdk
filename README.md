@@ -1,7 +1,15 @@
 # cue_sdk
 Python wrapper for the CUE SDK
 
-# Example
+[On PyPi](https://pypi.python.org/pypi/cue_sdk/)
+
+# Installation
+Use pip
+```python
+>>> pip install cue_sdk
+```
+
+# Usage example
 ```python
 >>> from cue_sdk import *
 # Load CUE DLL. Provide path to DLL yourself.
