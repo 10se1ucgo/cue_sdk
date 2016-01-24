@@ -1,4 +1,4 @@
-from ctypes import *
+from ctypes import Structure, c_int, c_char_p, c_double, c_bool, POINTER
 
 
 class CorsairDeviceInfo(Structure):

@@ -1,6 +1,6 @@
-from ctypes import *
+from ctypes import CDLL, c_bool, c_int, c_void_p, c_char, POINTER
 from .cue_struct import *
-from .cue_defines import *
+from .cue_defines import CorsairError, CE_Success
 from .cue_exceptions import *
 import platform
 
@@ -11,7 +11,7 @@ class CUE(object):
         if platform.system() == "Windows":
             self._libcue = CDLL(dll_path)
         else:
-            raise RuntimeError("CUE is not supported {platform} as of right now.".format(platform.system()))
+            raise RuntimeError("CUE is not supported {platform} as of right now.".format(platform=platform.system()))
         self.ProtocolDetails = self.PerformProtocolHandshake()
         self.ErrorCheck()
 
@@ -20,8 +20,10 @@ class CUE(object):
         self._libcue.CorsairSetLedsColors.argtypes = [c_int, POINTER(CorsairLedColor)]
         return self._libcue.CorsairSetLedsColors(size, led_color)
 
-    def SetLedsColorsAsync(self, size, led_color):
+    def SetLedsColorsAsync(self, size, led_color, callback, context):
         # Callback not implemented yet.
+        # c_func = CFUNCTYPE(c_void_p, c_void_p, c_bool, c_int)
+        # c_callback = c_func(callback)
         self._libcue.CorsairSetLedsColorsAsync.restype = c_bool
         self._libcue.CorsairSetLedsColorsAsync.argtypes = [c_int, POINTER(CorsairLedColor), c_void_p, c_void_p]
         return self._libcue.CorsairSetLedsColorsAsync(size, led_color, None, None)

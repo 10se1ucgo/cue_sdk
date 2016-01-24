@@ -60,3 +60,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# CUE DLLs
+CUESDK_2013.dll
+CUESDK.x64_2013.dll

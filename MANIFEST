@@ -1,4 +1,5 @@
 README.md
+LICENSE
 setup.py
 cue_sdk\__init__.py
 cue_sdk\cue_api.py
