@@ -1,3 +1,4 @@
+# Python port of text_highlight.cpp from the CUE SDK examples.
 from cue_sdk import *
 import time
 
