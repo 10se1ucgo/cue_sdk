@@ -35,6 +35,9 @@ class CUE(object):
         self._libcue.CorsairRequestControl.restype = c_bool
         self._libcue.CorsairRequestControl.argtypes = [c_int]
 
+        self._libcue.CorsairReleaseControl.restype = c_bool
+        self._libcue.CorsairReleaseControl.argtypes = [c_int]
+
         self._libcue.CorsairPerformProtocolHandshake.restype = CorsairProtocolDetails
 
         self._libcue.CorsairGetLastError.restype = c_int
