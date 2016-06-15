@@ -35,6 +35,9 @@ class CUE(object):
         self._libcue.CorsairRequestControl.restype = c_bool
         self._libcue.CorsairRequestControl.argtypes = [c_int]
 
+        self._libcue.CorsairReleaseControl.restype = c_bool
+        self._libcue.CorsairReleaseControl.argtypes = [c_int]
+
         self._libcue.CorsairPerformProtocolHandshake.restype = CorsairProtocolDetails
 
         self._libcue.CorsairGetLastError.restype = c_int
@@ -73,6 +76,9 @@ class CUE(object):
 
     def RequestControl(self, access_mode):
         return self._libcue.CorsairRequestControl(access_mode)
+
+    def ReleaseControl(self, access_mode):
+        return self._libcue.CorsairReleaseControl(access_mode)
 
     def PerformProtocolHandshake(self):
         return self._libcue.CorsairPerformProtocolHandshake()
