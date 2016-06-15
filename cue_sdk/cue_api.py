@@ -74,6 +74,9 @@ class CUE(object):
     def RequestControl(self, access_mode):
         return self._libcue.CorsairRequestControl(access_mode)
 
+    def ReleaseControl(self, access_mode):
+        return self._libcue.CorsairReleaseControl(access_mode)
+
     def PerformProtocolHandshake(self):
         return self._libcue.CorsairPerformProtocolHandshake()
 
