@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(name='cue_sdk',
       packages=['cue_sdk'],
-      version='1.0',
+      version='2.0',
       author='10se1ucgo',
       author_email='the10se1ucgo@gmail.com',
       url='https://github.com/10se1ucgo/cue_sdk',

@@ -15,40 +15,30 @@ Use pip
 # Load CUE DLL. Provide path to DLL yourself.
 >>> Corsair = CUE("CUESDK.x64_2013.dll")
 # Gives us exclusive access to controling the lighting and turns everything off.
->>> Corsair.RequestControl(CAM_ExclusiveLightingControl)
+>>> Corsair.RequestControl(CAM.ExclusiveLightingControl)
 True
 # Sets the color of the H key to white.
->>> Corsair.SetLedsColors(1, CorsairLedColor(CLK_H, 255, 255, 255))
+>>> Corsair.SetLedsColors(CorsairLedColor(CLK.H, 255, 255, 255))
 True
+# Sets the color of the A and B key to green
+Corsair.SetLedsColors([CorsairLedColor(CLK.A, 0, 255, 0), CorsairLedColor(CLK.B, 0, 255, 0)])
 # Returns number of Corsair devices.
 >>> Corsair.GetDeviceCount()
 1
-# Takes zero-based index of device and returns a pointer to the struct with device info.
->>> Corsair.GetDeviceInfo(0)
-<cue_sdk.cue_api.LP_CorsairDeviceInfo object at 0x000000000294DA48>
+# Takes zero-based index of device and returns a namedtuple with the device info.
 >>> device_info = Corsair.GetDeviceInfo(0)
-# Returns the model of the device. Look at cue_structs.py for the other fields. Index with the same device index.
->>> device_info[0].model
-'K70 RGB'
-# Returns a pointer to the struct with all the LED positions.
->>> Corsair.GetLedPositions() 
-<cue_sdk.cue_api.LP_CorsairLedPositions object at 0x0000000002A976C8>
->>> led_positions = Corsair.GetLedPositions()
-# Returns number of LEDs on the device. Index with the device index. Look at cue_structs.py for the other fields.
->>> led_positions[0].numberOfLed
-111
-# Returns the led id for the key name. Relative to logical layout (e.g. on an AZERTY keyboard it will return Q, not A)
+>>> print(device_info)
+CorsairDeviceInfo(type=<CDT.Keyboard: 2>, model='K70 RGB', physicalLayout=<CPL.US: 1>, logicalLayout=<CLL.NA: 2>, capsMask=<CDC.Lighting: 1>)
+# Takes zero-based index of device and returns a namedtuple with the led positions + led count.
+>>> Corsair.GetLedPositions(0) 
+CorsairLedPositions(numberOfLed=111, pLedPosition=[CorsairLedPosition(ledId=13, top=50.0, left=7.0, height=13.0, width=13.0), ...])
+# Returns the led id (CLK enum) for the key name. Relative to logical layout (e.g. on an AZERTY keyboard it will return Q, not A)
 >>> Corsair.CorsairGetLedIdForKeyName('a')
-38
->>> 38 is CLK_A
-True
+<CLK.A: 38>
 # Performs protocol handshake and returns details. Already called when the CUE class is initialized, no need to call for it yourself. 
 >>> Corsair.PerformProtocolHandshake()
-<cue_sdk.cue_struct.CorsairProtocolDetails object at 0x0000000002A98210>
+CorsairProtocolDetails(sdkVersion='1.15.28', serverVersion='1.16.42', sdkProtocolVersion=2, serverProtocolVersion=2, breakingChanges=False)
 # Protocol details are stored here when called handshake is performed on init.
 >>> Corsair.ProtocolDetails
-<cue_sdk.cue_struct.CorsairProtocolDetails object at 0x0000000002A980E0>
-# Returns the SDK version number. Look at cue_structs.py for the other fields.
->>> Corsair.ProtocolDetails.sdkVersion
-'1.10.73'
+CorsairProtocolDetails(sdkVersion='1.15.28', serverVersion='1.16.42', sdkProtocolVersion=2, serverProtocolVersion=2, breakingChanges=False)
 ```

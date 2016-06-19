@@ -64,3 +64,6 @@ target/
 # CUE DLLs
 CUESDK_2013.dll
 CUESDK.x64_2013.dll
+
+# a dumb test
+test.py
