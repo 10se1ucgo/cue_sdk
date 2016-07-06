@@ -1,12 +1,22 @@
-from enum import IntEnum, EnumMeta
+from enum import Enum, EnumMeta
 
-from six import with_metaclass
-
-from .cue_exceptions import *
+__all__ = ['CLK', 'CDT', 'CPL', 'CLL', 'CDC', 'CAM', 'CE']
 
 
-class CEnum(IntEnum):
-    """ctypes compatible IntEnum"""
+# Taken from six.py. I didn't use enough six functionality to justify requiring the entire module.
+def with_metaclass(meta, *bases):
+    """Create a base class with a metaclass."""
+    # This requires a bit of explanation: the basic idea is to make a dummy
+    # metaclass for one level of class instantiation that replaces itself with
+    # the actual metaclass.
+    class metaclass(meta):
+        def __new__(cls, name, this_bases, d):
+            return meta(name, bases, d)
+    return type.__new__(metaclass, 'temporary_class', (), {})
+
+
+class CEnum(Enum):
+    """ctypes compatible Enum"""
     @classmethod
     def from_param(cls, obj):
         return obj.value
@@ -32,8 +42,13 @@ class KeywordMeta(EnumMeta):
         return contains
 
 
-# contains list of available keys
 class CLK(with_metaclass(KeywordMeta, CEnum)):
+    """
+    Enumeration containing available keys
+    """
+    CLI_Invalid = 0  # dummy value
+
+    # keyboard leds
     Escape = 1
     F1 = 2
     F2 = 3
@@ -181,13 +196,19 @@ class CLK(with_metaclass(KeywordMeta, CEnum)):
     International5 = 145
     International4 = 146
     Fn = 147
+
+    # Mouse leds
     CLM_1 = 148
     CLM_2 = 149
     CLM_3 = 150
     CLM_4 = 151
+
+    # Headset leds
     CLH_LeftLogo = 152
     CLH_RightLogo = 153
+
     Logo = 154
+    CLI_Last = 154
 CLK._member_map_['1'] = CLK._1
 CLK._member_map_['2'] = CLK._2
 CLK._member_map_['3'] = CLK._3
@@ -200,28 +221,29 @@ CLK._member_map_['9'] = CLK._9
 CLK._member_map_['0'] = CLK._0
 
 
-class CLI(CEnum):
-    Invalid = 0
-    Last = CLK.Logo.value
-
-
-# contains list of available device types
 class CDT(CEnum):
+    """
+    Enumeration containing available device types.
+    """
     Unknown = 0
     Mouse = 1
     Keyboard = 2
     Headset = 3
 
 
-# contains list of available physical layouts for keyboards
 class CPL(CEnum):
+    """
+    Enumeration containing available device types.
+    """
     Invalid = 0  # dummy value
+
     # valid values for keyboard
     US = 1
     UK = 2
     BR = 3
     JP = 4
     KR = 5
+
     # valid values for mouse
     Zones1 = 6
     Zones2 = 7
@@ -229,8 +251,10 @@ class CPL(CEnum):
     Zones4 = 9
 
 
-# contains list of available logical layouts for keyboards
 class CLL(CEnum):
+    """
+    Enumeration containing available logical layouts for keyboards.
+    """
     Invalid = 0  # dummy value
     US_Int = 1
     NA = 2
@@ -281,10 +305,3 @@ class CE(CEnum):
     # if developer supplied invalid arguments to the function (for specifics look at function descriptions).
     # (developer error)
     InvalidArguments = 5
-
-CorsairError = [CE.Success,  # Dummy value
-                ServerNotFound,
-                NoControl,
-                ProtocolHandshakeMissing,
-                IncompatibleProtocol,
-                InvalidArguments]

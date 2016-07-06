@@ -1,4 +1,6 @@
-from .cue_api import *
-from .cue_struct import *
-from .cue_defines import *
-from .cue_exceptions import *
+from .api import *
+from .structures import *
+from .enumerations import *
+from . import exceptions
+
+__version__ = "2.1"
