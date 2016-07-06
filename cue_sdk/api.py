@@ -1,6 +1,7 @@
 import itertools
 import platform
 from ctypes import CDLL, c_bool, c_int, c_void_p, c_char, POINTER, CFUNCTYPE
+from enum import Enum
 from warnings import warn
 
 from .enumerations import *
@@ -20,6 +21,7 @@ def _error_check(func):
 
     return wrapper
 
+
 class CUESDK(object):
     ERRORS = (ServerNotFound, NoControl, ProtocolHandshakeMissing, IncompatibleProtocol, InvalidArguments)
 
@@ -36,7 +38,7 @@ class CUESDK(object):
             raise RuntimeError("CUE is not supported on {platform} as of right now.".format(platform=platform.system()))
 
         self.silence_errors = silence_errors
-        self.counter = itertools.count()
+        self.counter = itertools.count(1)
 
         # Function prototypes
         self._libcue.CorsairSetLedsColors.restype = c_bool
@@ -252,6 +254,7 @@ class CUESDK(object):
             ServerNotFound:
             InvalidArguments: If provided access_mode is not supported by this version of the SDK.
         """
+        access_mode = access_mode.value if isinstance(access_mode, Enum) else access_mode
         return self._libcue.CorsairRequestControl(access_mode)
 
     @_error_check
@@ -271,6 +274,7 @@ class CUESDK(object):
             InvalidArguments: If provided access_mode is not supported by this version of the SDK.
             IncompatibleProtocol: If the function was called for SDK that implements protocol version 1 or earlier.
         """
+        access_mode = access_mode.value if isinstance(access_mode, Enum) else access_mode
         return self._libcue.CorsairReleaseControl(access_mode)
 
     @_error_check
