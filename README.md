@@ -5,8 +5,8 @@ Python wrapper for the CUE SDK
 
 # Installation
 Use pip
-```python
->>> pip install cue_sdk
+```sh
+$ pip install cue_sdk
 ```
 
 # Usage example
@@ -21,7 +21,8 @@ True
 >>> Corsair.SetLedsColors(CorsairLedColor(CLK.H, 255, 255, 255))
 True
 # Sets the color of the A and B key to green
-Corsair.SetLedsColors([CorsairLedColor(CLK.A, 0, 255, 0), CorsairLedColor(CLK.B, 0, 255, 0)])
+>>> Corsair.SetLedsColors([CorsairLedColor(CLK.A, 0, 255, 0), CorsairLedColor(CLK.B, 0, 255, 0)])
+True
 # Returns number of Corsair devices.
 >>> Corsair.GetDeviceCount()
 1
