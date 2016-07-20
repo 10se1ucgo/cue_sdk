@@ -13,12 +13,22 @@ def range_float(start, stop, step):
         start += step
 
 
-def get_available_keys(device_id):
+def get_available_keys():
     colors = []
-    led_positions = Corsair.GetLedPositions(device_id)
-    for led in range(led_positions.numberOfLed):
-        led_id = led_positions.pLedPosition[led].ledId
-        colors.append(CorsairLedColor(led_id, 0, 0, 0))
+    for device_id in range(cue.get_device_count()):
+        device_info = cue.get_device_info(device_id)
+
+        if device_info.type == CDT.Mouse:
+            for x in range(device_info.physicalLayout.value - CPL.Zones1.value + 1):
+                led_id = CLK(CLK.CLM_1.value + x)
+                colors.append(CorsairLedColor(led_id, 0, 0, 0))
+        elif device_info.type == CDT.Keyboard:
+            led_positions = cue.get_led_positions(device_id)
+            for led in led_positions.pLedPosition:
+                colors.append(CorsairLedColor(led.ledId, 0, 0, 0))
+        elif device_info.type == CDT.Headset:
+            colors.append(CorsairLedColor(CLK.CLH_LeftLogo, 0, 0, 0))
+            colors.append(CorsairLedColor(CLK.CLH_RightLogo, 0, 0, 0))
 
     return colors
 
@@ -28,7 +38,7 @@ def perform_pulse_effect(colors, wave_duration, time_per_frame):
         val = (1 - pow(x - 1, 2)) * 255
         for led in colors:
             led.g = int(val)
-        Corsair.SetLedsColorsAsync(colors, None, None)
+        cue.set_led_colors_async(colors)
 
         time.sleep(time_per_frame / 1000)
 
@@ -36,7 +46,7 @@ def perform_pulse_effect(colors, wave_duration, time_per_frame):
 def main():
     wave_duration = 500
     time_per_frame = 25
-    colors = get_available_keys(device_id=0)
+    colors = get_available_keys()
     if not colors:
         return
 
@@ -53,6 +63,6 @@ def main():
 
 
 if __name__ == "__main__":
-    Corsair = CUE("CUESDK.x64_2013.dll")
-    Corsair.RequestControl(CAM.ExclusiveLightingControl)
+    cue = CUESDK("CUESDK.x64_2013.dll")
+    cue.request_control(CAM.ExclusiveLightingControl)
     main()

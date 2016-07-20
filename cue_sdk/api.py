@@ -2,6 +2,7 @@ import itertools
 import platform
 from ctypes import CDLL, c_bool, c_int, c_void_p, c_char, POINTER, CFUNCTYPE
 from enum import Enum
+from functools import wraps
 from warnings import warn
 
 from .enumerations import *
@@ -13,7 +14,10 @@ __all__ = ['CUE', 'CUESDK']
 
 
 def _error_check(func):
+    @wraps(func)
     def wrapper(self, *args, **kwargs):
+        if not isinstance(self, CUESDK):
+            raise TypeError("_error_check should only be used on CUESDK objects, silly.")
         res = func(self, *args, **kwargs)
         if not self.silence_errors:
             self.error_check()
@@ -145,7 +149,7 @@ class CUESDK(object):
         if callback:
             actual_context = next(self.counter)
             if not callable(callback):
-                raise TypeError
+                raise TypeError("The supplied callback is not callable.")
             self._callbacks[actual_context] = (callback, context)
         else:
             actual_context = None
@@ -191,7 +195,7 @@ class CUESDK(object):
         """
         dev_info = self._libcue.CorsairGetDeviceInfo(device_index)
         if not bool(dev_info):  # False if `dev_info` is a NULL pointer
-                return None
+            return None
         return CorsairDeviceInfo(dev_info.contents)
 
     @_error_check
@@ -312,7 +316,7 @@ class CUESDK(object):
     def _callback_handler(self, context, result, error):
         """
         NOT AN OFFICIAL SDK FUNCTION
-        This is the actual callback sent to the SDK. It prevents the garbage collection of the CFUNCTYPE prototypes,
+        This is the actual callback sent to the SDK. It prevents the garbage collection of the CFUNCTYPE objects,
         and handles any context clashes.
 
         Args:
@@ -327,10 +331,10 @@ class CUESDK(object):
             ServerNotFound, NoControl, ProtocolHandshakeMissing, IncompatibleProtocol, InvalidArguments: If an error
                 occurred and silence_errors is False
         """
-        if (not self.silence_errors) and (not result) and error:
+        if not self.silence_errors and not result and error:
             raise self.ERRORS[error - 1]
 
-        if context is not None and context in self._callbacks:
+        if context in self._callbacks:
             callback, user_context = self._callbacks.pop(context)
             callback(user_context, result, CE(error))
 
