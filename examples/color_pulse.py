@@ -63,6 +63,6 @@ def main():
 
 
 if __name__ == "__main__":
-    cue = CUESDK("CUESDK.x64_2013.dll")
+    cue = CUESDK("CUESDK_2015.dll")
     cue.request_control(CAM.ExclusiveLightingControl)
     main()
