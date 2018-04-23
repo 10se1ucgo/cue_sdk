@@ -38,7 +38,7 @@ setup(
         'Programming Language :: Python :: 3'
     ],
 
-    keywords='Corsair CUE Strafe Void Scimitar K95 K70 K65 M65 Sabre RGB Keyboard Mouse',
+    keywords='Corsair CUE Strafe Void Scimitar K95 K70 K68 K65 M65 Sabre RGB Keyboard Mouse',
 
     packages=['cue_sdk'],
 

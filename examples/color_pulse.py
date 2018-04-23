@@ -3,6 +3,7 @@ from __future__ import division
 import win32api
 import win32con
 import time
+import sys
 
 from cue_sdk import *
 
@@ -63,6 +64,13 @@ def main():
 
 
 if __name__ == "__main__":
-    cue = CUESDK("CUESDK.x64_2013.dll")
+    # To determine whether or not we are using a 64-bit version of Python,
+    # we will check sys.maxsize. 64-bit Python will have a maxsize value of
+    # 9223372036854775807, while 32-bit Python will have a mazsize value of
+    # 2147483647.
+    if sys.maxsize == 9223372036854775807:
+        cue = CUESDK("CUESDK.x64_2015.dll")
+    else:
+        cue = CUESDK("CUESDK_2015.dll")
     cue.request_control(CAM.ExclusiveLightingControl)
     main()
